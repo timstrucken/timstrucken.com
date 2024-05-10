@@ -12,7 +12,22 @@
  */
 
 export default {
-	async fetch(request: Request, env: Env, ctx: ExecutionContext): Promise<Response> {
-		return new Response('Hello World!');
+	async fetch(req: Request, env: Env, ctx: ExecutionContext): Promise<Response> {
+		let internalURL = (pathname: string) => {
+			let url = new URL(new URL(req.url).origin);
+			url.pathname = pathname;
+			return url;
+		};
+		let reqPath = new URL(req.url).pathname;
+
+		return reqPath == '/'
+			? this.redirectResponse(false, internalURL('/contact'))
+			: reqPath == '/contact'
+			? this.redirectResponse(true, new URL('https://gravatar.com/timstrucken'))
+			: new Response('Not found', { status: 404 });
+	},
+
+	redirectResponse(isPermanent: boolean, targetURL: URL) {
+		return new Response(null, { status: isPermanent ? 301 : 302, headers: { location: targetURL.toString() } });
 	},
 };
