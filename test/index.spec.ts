@@ -20,9 +20,6 @@ describe('timstrucken.com worker', () => {
 
 	it('Respond with 404 to host/xyz', async () => {
 		const response = await SELF.fetch('https://example.com/xyz');
-
-		// 404 is the actually expected value.
-		// Value changed to check out the disply of a failure on gh actions.
-		expect(response.status).toBe(403);
+    expect(response.status).toBe(404);
 	});
 });
